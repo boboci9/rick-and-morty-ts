@@ -1,6 +1,6 @@
 import './index.scss'
-import React, { useEffect, useState, UIEvent } from 'react'
-import { useLazyQuery, useQuery } from '@apollo/client'
+import { useState, UIEvent } from 'react'
+import { useQuery } from '@apollo/client'
 import { CHARACTER_LIST_PAGED } from '../../../graphql/characters'
 import Character, { CharacterType } from '../Card'
 import { Alert, LinearProgress } from '@mui/material'
@@ -17,8 +17,8 @@ const CharacterList = () => {
     },
   })
 
-  const loadMoreCharacters = async () => {
-    const fetchedMore = await fetchMore({
+  const loadMoreCharacters = () => {
+    fetchMore({
       variables: { page },
     })
   }
