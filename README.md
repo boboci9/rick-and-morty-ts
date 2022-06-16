@@ -1,5 +1,7 @@
 # rick-and-morty-ts
 
+Listing the characters from Rick and Morty with card flipping and infinite loading.
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
