@@ -1,0 +1,18 @@
+@import '../../App.scss';
+.App {
+  display: flex;
+}
+.page {
+  height: 100%;
+  flex: 1;
+  color: $primary-color;
+}
+
+.top-tags {
+  bottom: auto;
+  top: 35px;
+}
+.tags {
+  color: $primary-color;
+  opacity: 0.6;
+}
