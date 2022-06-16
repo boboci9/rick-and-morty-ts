@@ -1,0 +1,13 @@
+.list {
+  h1 {
+    text-align: center;
+    font-size: -webkit-xxx-large;
+    font-family: monospace;
+  }
+  .characters > div {
+    display: flex;
+    flex-wrap: wrap;
+    overflow: auto;
+    height: 600px;
+  }
+}
