@@ -1,33 +1,37 @@
 import './index.scss'
-import { useState } from 'react'
-import { useLazyQuery } from '@apollo/client'
+import React, { useEffect, useState, UIEvent } from 'react'
+import { useLazyQuery, useQuery } from '@apollo/client'
 import { CHARACTER_LIST_PAGED } from '../../../graphql/characters'
 import Character, { CharacterType } from '../Card'
 import { Alert, LinearProgress } from '@mui/material'
-import { InfiniteContainer } from '../../Utils/InfiniteContainer'
 const CharacterList = () => {
-  const [page, setPage] = useState(0)
-  const [characters, setCharacters] = useState([])
-  const [loadCharacters, { data, error, loading }] = useLazyQuery(
-    CHARACTER_LIST_PAGED,
-    {
-      variables: { page },
-    }
-  )
-  console.log(data, error, loading)
-  const hasMoreData = data && data.characters && data.characters.info.next
+  const [page, setPage] = useState(1)
+  const [hasMoreData, setHasMoreData] = useState(true)
+  const [characters, setCharacters] = useState<CharacterType[]>([])
+  const { error, loading, fetchMore } = useQuery(CHARACTER_LIST_PAGED, {
+    onCompleted: (result) => {
+      const { results, info } = result.characters
+      setHasMoreData(info.next)
+      setCharacters((previousCharacters) => [...previousCharacters, ...results])
+      setPage((page) => info.next)
+    },
+  })
 
-  const loadMoreNumbers = () => {
-    setPage((page) => page + 1)
-    loadCharacters({ variables: { page } })
-    // setLoading(true)
-    // setTimeout(() => {
-    //   const newNumbers = new Array(NUMBERS_PER_PAGE)
-    //     .fill(1)
-    //     .map((_, i) => page * CHARACTERS_PER_PAGE + i)
-    //   setNumbers((nums) => [...nums, ...newNumbers])
-    //   setLoading(false)
-    // }, 300)
+  const loadMoreCharacters = async () => {
+    const fetchedMore = await fetchMore({
+      variables: { page },
+    })
+  }
+  const onScroll = (event: UIEvent<HTMLElement>) => {
+    if (!hasMoreData) return
+    if (
+      event.currentTarget.scrollTop + event.currentTarget.clientHeight ===
+      event.currentTarget.scrollHeight
+    ) {
+      loadMoreCharacters()
+    }
+
+    return
   }
   return (
     <div className="list">
@@ -38,19 +42,10 @@ const CharacterList = () => {
         </Alert>
       )}
       {loading && <LinearProgress color="inherit" />}
-      <div className="characters">
-        <InfiniteContainer
-          hasMoreData={hasMoreData}
-          isLoading={loading}
-          onBottomHit={loadMoreNumbers}
-          loadOnMount={true}
-        >
-          {data &&
-            data.characters &&
-            data.characters.results.map((character: CharacterType) => {
-              return <Character key={character.id} {...character} />
-            })}
-        </InfiniteContainer>
+      <div className="characters" onScroll={onScroll}>
+        {characters.map((character: CharacterType) => {
+          return <Character key={character.id} {...character} />
+        })}
       </div>
     </div>
   )

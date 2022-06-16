@@ -22,6 +22,8 @@ export const CHARACTER_LIST_PAGED = gql`
         image
         species
         gender
+        status
+        type
       }
       info {
         count

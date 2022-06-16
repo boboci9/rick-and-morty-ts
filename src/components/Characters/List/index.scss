@@ -4,10 +4,15 @@
     font-size: -webkit-xxx-large;
     font-family: monospace;
   }
-  .characters > div {
+  .characters {
+    // display: flex;
+    // flex-wrap: wrap;
+    // overflow: auto;
+    height: 500px;
+
+    flex: 1;
     display: flex;
     flex-wrap: wrap;
     overflow: auto;
-    height: 600px;
   }
 }
